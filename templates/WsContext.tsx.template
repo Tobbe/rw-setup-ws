@@ -1,0 +1,70 @@
+import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+
+interface WsContextProps {
+  clients: Record<string, string>
+  setMessage: (clientId: string, message: string) => void
+}
+
+const WsContext = React.createContext<WsContextProps | undefined>(undefined)
+
+interface Props {
+  children: React.ReactNode
+}
+
+const WsContextProvider: React.FC<Props> = ({ children }) => {
+  const [clients, setClients] = useState<Record<string, string>>({})
+
+  const ws = useRef<WebSocket>()
+
+  useEffect(() => {
+    const socket = new WebSocket('ws://localhost:8911/ws')
+
+    socket.onopen = (event) => {
+      console.log('socket open', event)
+    }
+    socket.onclose = (event) => {
+      console.log('socket close', event)
+    }
+    socket.onerror = (event) => {
+      console.log('socket error', event)
+    }
+    socket.onmessage = (event) => {
+      console.log('onmessage', event.data)
+
+      try {
+        const clients = JSON.parse(event.data)
+        setClients(clients)
+      } catch (e) {
+        console.error('JSON.parse error', e)
+      }
+    }
+
+    ws.current = socket
+
+    return () => {
+      socket.close()
+    }
+  }, [])
+
+  const setScore = useCallback((clientId: string, message: string) => {
+    ws.current?.send(JSON.stringify({ clientId, message }))
+  }, [])
+
+  return (
+    <WsContext.Provider value={{ clients, setMessage }}>
+      {children}
+    </WsContext.Provider>
+  )
+}
+
+export function useWsContext() {
+  const context = useContext(WsContext)
+
+  if (!context) {
+    throw new Error('useWsContext must be used within a WsContextProvider')
+  }
+
+  return context
+}
+
+export default WsContextProvider

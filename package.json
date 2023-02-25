@@ -1,0 +1,41 @@
+{
+  "name": "rw-setup-ws",
+  "version": "0.0.1",
+  "description": "Setup WebSockets in RedwoodJS",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.cts",
+  "exports": {
+    "require": {
+      "types": "./dist/index.d.cts",
+      "default": "./dist/index.cjs"
+    },
+    "import": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "bin": "./dist/cli.js",
+  "scripts": {
+    "build": "pkgroll",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "redwood",
+    "websockets",
+    "redwoodjs",
+    "websocket",
+    "realtime"
+  ],
+  "author": "Tobbe Lundberg",
+  "license": "MIT",
+  "devDependencies": {
+    "@redwoodjs/cli": "^4.2.0",
+    "pkgroll": "^1.9.0"
+  },
+  "dependencies": {
+    "chalk": "^5.2.0",
+    "execa": "^7.0.0",
+    "listr2": "^5.0.7"
+  }
+}
