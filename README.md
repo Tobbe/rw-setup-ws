@@ -15,7 +15,7 @@ To actually send something you'll need to use the `sendMessage` method on that c
 
 Here's a very basic example page you can use to get started. Run `yarn rw g page WebSocket` and then paste the code below in the generated page.
 
-```
+```tsx
 import { useState } from 'react'
 
 import { useWsContext } from 'src/components/WsContext/WsContext'
