@@ -179,7 +179,7 @@ export const handler = async ({ force }: { force: boolean }) => {
           task.title = `One more thing...\n
           ${colors.green('Read more about WebSockets in Redwood:')}\n
           ${chalk.hex('#e8e8e8')(
-            'https://tlundberg.com/websockets-in-redwoodjs'
+            'https://community.redwoodjs.com/t/experiment-websockets-with-redwoodjs/4648'
           )}
         `
         },
