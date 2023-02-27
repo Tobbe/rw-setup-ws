@@ -2,19 +2,7 @@
   "name": "rw-setup-ws",
   "version": "0.0.1",
   "description": "Setup WebSockets in RedwoodJS",
-  "main": "./dist/cli.cjs",
-  "module": "./dist/webSockets.mjs",
-  "types": "./dist/webSockets.d.cts",
-  "exports": {
-    "require": {
-      "types": "./dist/webSockets.d.cts",
-      "default": "./dist/webSockets.cjs"
-    },
-    "import": {
-      "types": "./dist/webSockets.d.mts",
-      "default": "./dist/webSockets.mjs"
-    }
-  },
+  "main": "./dist/cli.js",
   "bin": "./dist/cli.js",
   "scripts": {
     "build": "pkgroll",
@@ -31,11 +19,14 @@
   "license": "MIT",
   "devDependencies": {
     "@redwoodjs/cli": "^4.2.0",
-    "@types/findup-sync": "^4.0.2",
-    "@types/yargs": "^17.0.22",
     "pkgroll": "^1.9.0"
   },
+  "peerDependencies": {
+    "@redwoodjs/cli": "^4.2.0"
+  },
   "dependencies": {
+    "@types/findup-sync": "^4.0.2",
+    "@types/yargs": "^17.0.22",
     "chalk": "^5.2.0",
     "execa": "^7.0.0",
     "findup-sync": "^5.0.0",
