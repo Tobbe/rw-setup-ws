@@ -82,3 +82,7 @@ If you want to add JS support, or contribute any other changes an easy way to te
 ```
 yarn start --cwd ../rw-example-project --force
 ```
+
+### Releasing
+
+It's made to be released by npm (e.g. `npm run release:patch`). That way I don't have to worry about yarn v1 vs v3
