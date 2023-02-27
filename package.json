@@ -25,11 +25,11 @@
   "author": "Tobbe Lundberg",
   "license": "MIT",
   "devDependencies": {
-    "@redwoodjs/cli": "^4.2.0",
+    "@redwoodjs/cli": "^4.0.0",
     "pkgroll": "^1.9.0"
   },
   "peerDependencies": {
-    "@redwoodjs/cli": "^4.2.0"
+    "@redwoodjs/cli": "^4.0.0"
   },
   "dependencies": {
     "@types/findup-sync": "^4.0.2",
