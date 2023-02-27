@@ -73,4 +73,12 @@ export default WebSocketPage
 Note
 ----
 
-Currently this only works for TS projects. 
+Currently this only works for TS projects. (Also see below 😉)
+
+Contributing
+------------
+
+If you want to add JS support, or contribute any other changes an easy way to test this locally is:
+```
+npx -y tsx src/webSockets --cwd ../rw-example-project --force
+```
