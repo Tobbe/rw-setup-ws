@@ -39,7 +39,7 @@ const WebSocketPage = () => {
       <br />
       <br />
       <label>
-        Score:{' '}
+        Message:{' '}
         <input
           value={message}
           onChange={(event) => {
