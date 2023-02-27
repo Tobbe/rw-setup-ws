@@ -5,8 +5,6 @@ import chalk from 'chalk'
 import { execaCommand } from 'execa'
 import { Listr } from 'listr2'
 
-// import { fileIncludes } from '@redwoodjs/cli/dist/lib/extendFile'
-
 import { colors, getPaths, writeFile } from '@redwoodjs/cli-helpers'
 
 interface ErrorWithExitCode extends Error {
@@ -166,8 +164,6 @@ export const handler = async ({ force }: { force: boolean }) => {
             { existingFiles: 'OVERWRITE' }
           )
 
-          // TODO: Remove
-          // const appTsxPath = path.join(getPaths().web.src, 'App.tsx')
           const appTsxPath = getPaths().web.app
           const appTsx = fs.readFileSync(appTsxPath, 'utf-8')
           const newAppTsx = addWsContextComponent(appTsx).replace(
@@ -177,23 +173,6 @@ export const handler = async ({ force }: { force: boolean }) => {
           fs.writeFileSync(appTsxPath, newAppTsx)
         },
       },
-      // {
-      //   title: 'Adding import to App.{js,tsx}...',
-      //   task: (_ctx, task) => {
-      //     /**
-      //      * Add i18n import to the last import of App.{js,tsx}
-      //      *
-      //      * Check if i18n import already exists.
-      //      * If it exists, throw an error.
-      //      */
-      //     let appJS = fs.readFileSync(APP_JS_PATH)
-      //     if (i18nImportExist(appJS)) {
-      //       task.skip('Import already exists in App.js')
-      //     } else {
-      //       fs.writeFileSync(APP_JS_PATH, addI18nImport(appJS))
-      //     }
-      //   },
-      // },
       {
         title: 'One more thing...',
         task: (_ctx, task) => {
