@@ -1,6 +1,6 @@
 {
   "name": "rw-setup-ws",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Setup WebSockets in RedwoodJS",
   "main": "./dist/cli.js",
   "bin": "./dist/cli.js",
