@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 
 import chalk from 'chalk'
-import { execaCommand } from 'execa'
+import execa from 'execa'
 import { Listr } from 'listr2'
 
 import { colors, getPaths, writeFile } from '@redwoodjs/cli-helpers'
@@ -60,13 +60,13 @@ export const handler = async ({ force }: { force: boolean }) => {
     [
       {
         title: 'Installing packages...',
-        task: async () => {
+        task: () => {
           return new Listr(
             [
               {
                 title: 'Install @fastify/websocket',
-                task: async () => {
-                  await execaCommand(
+                task: () => {
+                  execa.commandSync(
                     'yarn workspace api add @fastify/websocket',
                     process.env['RWJS_CWD']
                       ? {
