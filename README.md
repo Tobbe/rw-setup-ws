@@ -7,7 +7,7 @@ Usage
 -----
 
 ```
-npx -y rw-setup-ws
+yarn dlx rw-setup-ws
 ```
 
 Run the command above inside your RW project and it'll configure your Fastify (dev) server and add a React Context to the web side you can use to communicate over a WebSocket.
