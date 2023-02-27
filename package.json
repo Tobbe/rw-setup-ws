@@ -7,6 +7,7 @@
     "rw-setup-ws": "./dist/cli.js"
   },
   "scripts": {
+    "start": "tsx src/cli",
     "build": "rm -fr ./dist && pkgroll",
     "cleannpx": "rm -fr ./npx && mkdir -p ./npx/dist && mkdir ./npx/templates",
     "copypkgfiles": "yarn cleannpx && cp README.md ./npx/ && cp package.json ./npx/",
@@ -27,7 +28,8 @@
   "author": "Tobbe Lundberg",
   "license": "MIT",
   "devDependencies": {
-    "pkgroll": "^1.9.0"
+    "pkgroll": "^1.9.0",
+    "tsx": "^3.12.3"
   },
   "dependencies": {
     "@redwoodjs/cli-helpers": "^4.0.0",

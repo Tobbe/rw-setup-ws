@@ -80,5 +80,5 @@ Contributing
 
 If you want to add JS support, or contribute any other changes an easy way to test this locally is:
 ```
-npx -y tsx src/cli --cwd ../rw-example-project --force
+yarn start --cwd ../rw-example-project --force
 ```
