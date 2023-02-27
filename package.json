@@ -2,17 +2,17 @@
   "name": "rw-setup-ws",
   "version": "0.0.1",
   "description": "Setup WebSockets in RedwoodJS",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.cts",
+  "main": "./dist/cli.cjs",
+  "module": "./dist/webSockets.mjs",
+  "types": "./dist/webSockets.d.cts",
   "exports": {
     "require": {
-      "types": "./dist/index.d.cts",
-      "default": "./dist/index.cjs"
+      "types": "./dist/webSockets.d.cts",
+      "default": "./dist/webSockets.cjs"
     },
     "import": {
-      "types": "./dist/index.d.mts",
-      "default": "./dist/index.mjs"
+      "types": "./dist/webSockets.d.mts",
+      "default": "./dist/webSockets.mjs"
     }
   },
   "bin": "./dist/cli.js",
