@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from 'react'
 
 interface WsContextProps {
   clients: Record<string, string>
-  setMessage: (clientId: string, message: string) => void
+  sendMessage: (clientId: string, message: string) => void
 }
 
 const WsContext = React.createContext<WsContextProps | undefined>(undefined)
@@ -46,12 +46,12 @@ const WsContextProvider: React.FC<Props> = ({ children }) => {
     }
   }, [])
 
-  const setMessage = useCallback((clientId: string, message: string) => {
+  const sendMessage = useCallback((clientId: string, message: string) => {
     ws.current?.send(JSON.stringify({ clientId, message }))
   }, [])
 
   return (
-    <WsContext.Provider value={{ clients, setMessage }}>
+    <WsContext.Provider value={{ clients, sendMessage }}>
       {children}
     </WsContext.Provider>
   )

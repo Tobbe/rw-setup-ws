@@ -51,7 +51,7 @@ const WebSocketPage = () => {
 
             // Send to the server to update all clients (including
             // this one)
-            ws.setMessage(name, message)
+            ws.sendMessage(name, message)
           }}
         />
       </label>
