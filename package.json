@@ -1,6 +1,6 @@
 {
   "name": "rw-setup-ws",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Setup WebSockets in RedwoodJS",
   "repository": {
     "type": "git",
