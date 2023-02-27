@@ -6,14 +6,14 @@
   "bin": "./dist/cli.js",
   "scripts": {
     "build": "rm -fr ./dist && pkgroll",
-    "cleanlib": "rm -fr ./lib && mkdir -p ./lib/bin && mkdir ./lib/templates",
-    "copypkgfiles": "yarn cleanlib && cp README.md ./lib/ && cp package.json ./lib/",
-    "copybin": "cp ./dist/*.js ./lib/bin",
-    "copytemplates": "cp ./templates/* ./lib/templates/",
+    "cleannpx": "rm -fr ./npx && mkdir -p ./npx/bin && mkdir ./npx/templates",
+    "copypkgfiles": "yarn cleannpx && cp README.md ./npx/ && cp package.json ./npx/",
+    "copybin": "cp ./dist/*.js ./npx/bin",
+    "copytemplates": "cp ./templates/* ./npx/templates/",
     "copyforrelease": "yarn copypkgfiles && yarn copybin && yarn copytemplates",
-    "release:patch": "yarn build && npm version patch && yarn copyforrelease && cd lib && npm publish --dry-run",
-    "release:minor": "yarn build && npm version minor && yarn copyforrelease && cd lib && npm publish --dry-run",
-    "release:major": "yarn build && npm version major && yarn copyforrelease && cd lib && npm publish --dry-run"
+    "release:patch": "yarn build && npm version patch && yarn copyforrelease && cd npx && npm publish --dry-run",
+    "release:minor": "yarn build && npm version minor && yarn copyforrelease && cd npx && npm publish --dry-run",
+    "release:major": "yarn build && npm version major && yarn copyforrelease && cd npx && npm publish --dry-run"
   },
   "keywords": [
     "redwood",

@@ -21,3 +21,4 @@ blog-test-project/*
 .pnp.*
 *.code-workspace
 .nova
+npx/
