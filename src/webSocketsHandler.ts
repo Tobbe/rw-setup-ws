@@ -2,24 +2,46 @@ import fs from 'fs'
 import path from 'path'
 
 import chalk from 'chalk'
-import execa from 'execa'
+import { execaCommand } from 'execa'
 import { Listr } from 'listr2'
 
-import { getPaths, writeFile } from '@redwoodjs/cli/dist/lib'
-import colors from '@redwoodjs/cli/dist/lib/colors'
-const c = colors.default
 // import { fileIncludes } from '@redwoodjs/cli/dist/lib/extendFile'
 
-const APP_JS_PATH = getPaths().web.app
+import { colors, getPaths, writeFile } from '@redwoodjs/cli-helpers'
 
-console.log('APP_JS_PATH', APP_JS_PATH)
+interface ErrorWithExitCode extends Error {
+  exitCode?: number
+}
 
-// const addI18nImport = (appJS) => {
-//   var content = appJS.toString().split('\n').reverse()
-//   const index = content.findIndex((value) => /import/.test(value))
-//   content.splice(index, 0, "import './i18n'")
-//   return content.reverse().join(`\n`)
-// }
+function isErrorWithExitCode(e: unknown): e is ErrorWithExitCode {
+  return typeof (e as ErrorWithExitCode)?.exitCode !== 'undefined'
+}
+
+const addWsContextComponent = (appTsx: string) => {
+  var content = appTsx.split('\n')
+  const index = content.findIndex((value) => /<Routes .*\/>/.test(value))
+  const routesLine = content[index]
+  if (!routesLine) {
+    throw new Error('Could not find "<Routes />"')
+  }
+
+  const routesIndent = routesLine.match(/^\s*/)?.[0].length
+  if (typeof routesIndent === 'undefined') {
+    throw new Error('Could not find <Routes /> indentation')
+  }
+  
+  const indent = ' '.repeat(routesIndent)
+
+  content.splice(
+    index,
+    1,
+    indent + '<WsContextProvider>',
+    "  " + routesLine,
+    indent + '</WsContextProvider>'
+  )
+
+  return content.join(`\n`)
+}
 
 const wsContextPath = () => {
   const wsContextPath = path.join(
@@ -35,8 +57,7 @@ const wsContextExists = () => {
   return fs.existsSync(wsContextPath())
 }
 
-export const handler = async ({ force }) => {
-  const rwPaths = getPaths()
+export const handler = async ({ force }: { force: boolean }) => {
   const tasks = new Listr(
     [
       {
@@ -47,8 +68,13 @@ export const handler = async ({ force }) => {
               {
                 title: 'Install @fastify/websocket',
                 task: async () => {
-                  await execa.execaCommand(
-                    'yarn workspace api add @fastify/websocket'
+                  await execaCommand(
+                    'yarn workspace api add @fastify/websocket',
+                    process.env['RWJS_CWD']
+                      ? {
+                          cwd: process.env['RWJS_CWD'],
+                        }
+                      : {}
                   )
                 },
               },
@@ -67,7 +93,7 @@ export const handler = async ({ force }) => {
            * If existing config is detected an error will be thrown
            */
 
-          const configPath = path.join(getPaths().api, 'server.config.js')
+          const configPath = path.join(getPaths().api.base, 'server.config.js')
           const serverConfigJs = fs.readFileSync(configPath, 'utf-8')
 
           if (!force && serverConfigJs.includes('@fastify/websocket')) {
@@ -78,7 +104,12 @@ export const handler = async ({ force }) => {
           }
 
           const defaultServerConfigJs = fs.readFileSync(
-            '../templates/server.config.js.default',
+            path.resolve(
+              __dirname,
+              '..',
+              'templates',
+              'server.config.js.default'
+            ),
             'utf-8'
           )
 
@@ -90,14 +121,19 @@ export const handler = async ({ force }) => {
           }
 
           const newServerConfigJs = fs.readFileSync(
-            path.resolve(__dirname, 'templates', 'server.config.js.template'),
+            path.resolve(
+              __dirname,
+              '..',
+              'templates',
+              'server.config.js.template'
+            ),
             'utf-8'
           )
 
           return writeFile(
-            path.join(getPaths().api, 'server.config.js'),
+            path.join(getPaths().api.base, 'server.config.js'),
             newServerConfigJs,
-            { overwriteExisting: true }
+            { existingFiles: 'OVERWRITE' }
           )
         },
       },
@@ -119,6 +155,7 @@ export const handler = async ({ force }) => {
 
           const wsContextTemplatePath = path.resolve(
             __dirname,
+            '..',
             'templates',
             'WsContext.tsx.template'
           )
@@ -126,20 +163,17 @@ export const handler = async ({ force }) => {
             wsContextPath(),
             // TODO: ts-to-js if needed
             fs.readFileSync(wsContextTemplatePath, 'utf-8'),
-            { overwriteExisting: true }
+            { existingFiles: 'OVERWRITE' }
           )
 
-          const appTsxPath = path.join(getPaths().web.src, 'App.tsx')
+          // TODO: Remove
+          // const appTsxPath = path.join(getPaths().web.src, 'App.tsx')
+          const appTsxPath = getPaths().web.app
           const appTsx = fs.readFileSync(appTsxPath, 'utf-8')
-          const newAppTsx = appTsx
-            .replace(
-              "import Routes from 'src/Routes'",
-              "import Routes from 'src/Routes'\n\nimport WsContextProvider from './components/WsContext/WsContext'"
-            )
-            .replace(
-              '<Routes />',
-              '<WsContextProvider><Routes /></WsContextProvider>'
-            )
+          const newAppTsx = addWsContextComponent(appTsx).replace(
+            "import Routes from 'src/Routes'",
+            "import Routes from 'src/Routes'\n\nimport WsContextProvider from './components/WsContext/WsContext'"
+          )
           fs.writeFileSync(appTsxPath, newAppTsx)
         },
       },
@@ -164,7 +198,7 @@ export const handler = async ({ force }) => {
         title: 'One more thing...',
         task: (_ctx, task) => {
           task.title = `One more thing...\n
-          ${c.green('Read more about WebSockets in Redwood:')}\n
+          ${colors.green('Read more about WebSockets in Redwood:')}\n
           ${chalk.hex('#e8e8e8')(
             'https://tlundberg.com/websockets-in-redwoodjs'
           )}
@@ -178,7 +212,16 @@ export const handler = async ({ force }) => {
   try {
     await tasks.run()
   } catch (e) {
-    console.error(c.error(e.message))
-    process.exit(e?.exitCode || 1)
+    if (e instanceof Error) {
+      console.error(colors.error(e.message))
+    } else {
+      console.error(colors.error('Unknown error when running yargs tasks'))
+    }
+
+    if (isErrorWithExitCode(e)) {
+      process.exit(e.exitCode)
+    }
+
+    process.exit(1)
   }
 }

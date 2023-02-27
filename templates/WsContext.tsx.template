@@ -46,7 +46,7 @@ const WsContextProvider: React.FC<Props> = ({ children }) => {
     }
   }, [])
 
-  const setScore = useCallback((clientId: string, message: string) => {
+  const setMessage = useCallback((clientId: string, message: string) => {
     ws.current?.send(JSON.stringify({ clientId, message }))
   }, [])
 
